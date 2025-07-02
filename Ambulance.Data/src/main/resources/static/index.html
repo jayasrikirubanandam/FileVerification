@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>File Validator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="form-box">
+	
+		<form class="form">
+			<span class="title">File Validator</span> <span class="subtitle">Validate your files by just one click.</span>
+			<div class="form-container">
+				<label for="dropdown" class = "input">Choose option:</label><br></br> 
+					<select id="dropdown">
+					<option value="AMBULANCE" class="input"> AMBULANCE </option>
+					<option value="DRUGSERVICES" class="input"> PHYSICIAN </option>
+					</select> 
+					<br></br>
+					<div class="file-wrapper">
+					<input type="file" name ="file" id = "emsfile" class="chooseFile" required>
+					</div>
+			</div>
+			<button id= "validateReport" type="button" 
+			 onclick="FileAnalysis()">Validate</button>
+		</form>
+		
+	</div>
+
+</body>
+
+<script>
+
+function FileAnalysis(){
+	
+	const getFile = document.getElementById("emsfile");
+	
+	const dropdown = document.getElementById("dropdown");
+	const selectedValue = dropdown.value;
+	
+	if (!getFile.files || getFile.files.length === 0) {
+        alert("Please select a file before submitting.");
+        return;
+    }
+	
+	const formData = new FormData();
+	formData.append("file",getFile.files[0]);
+	formData.append("dropdown",selectedValue);
+	
+	fetch("/processingFile", {
+		method:'POST',
+		body:formData
+	})
+	.then(response=>response.text())
+	.then(text => {
+		console.log(text);
+	})
+	.catch(error=>{
+		console.error("Error:",error)
+	});
+	
+}
+
+
+</script>
+</html>
+
